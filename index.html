@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DESA NETIZEN - PAK RT</title>
+<style>
+body{margin:0;font-family:Arial;background:#0f172a;color:#fff;text-align:center;padding:15px}
+.card{background:#1e293b;padding:18px;border-radius:20px;max-width:360px;margin:14px auto}
+input,select{width:100%;padding:12px;border:none;border-radius:10px;margin:6px 0;font-size:15px;text-align:center;box-sizing:border-box}
+button{width:100%;padding:13px;border:none;border-radius:12px;font-weight:bold;font-size:15px;margin:6px 0}
+.hijau{background:#22c55e;color:#fff}.biru{background:#3b82f6;color:#fff}.abu{background:#334155;color:#fff}.merah{background:#ef4444;color:#fff}
+.kecil{font-size:12px;color:#94a3b8}
+.papan{background:#000;border:3px solid #f59e0b;border-radius:15px;padding:12px;text-align:left}
+.warga{background:#111827;border-left:4px solid #22c55e;padding:10px;border-radius:10px;margin:8px 0;display:flex;justify-content:space-between;align-items:center}
+.pakrt{background:#fef3c7;color:#000;border-left:5px solid #f59e0b;border:2px solid #f59e0b}
+.badge{background:#22c55e;color:#fff;font-size:10px;padding:3px 7px;border-radius:20px}
+.badge-rt{background:#f59e0b;color:#000;font-size:10px;padding:3px 7px;border-radius:20px}
+</style>
+</head>
+<body>
+<div style="font-size:60px">👑</div>
+<h1 style="margin:5px">DESA NETIZEN</h1>
+<p class="kecil">Dipimpin oleh Pak RT! 🇮🇩</p>
+
+<!-- PAK RT - KAMU -->
+<div class="card" style="background:#fef3c7;color:#000">
+<h3 style="margin:0">👑 PAK RT DESA NETIZEN</h3>
+<p style="font-size:13px;margin:8px 0">Siapa nama Pak RT-nya? Isi sekali aja!</p>
+<input id="namaRT" placeholder="Nama Kamu (Pak RT)">
+<button class="abu" onclick="simpanRT()" style="background:#000;color:#fff">👑 SIMPAN SEBAGAI PAK RT</button>
+<p style="font-size:12px" id="infoRT"></p>
+</div>
+
+<!-- BIKIN KTP WARGA -->
+<div class="card">
+<h3>🪪 WARGA MAU BIKIN KTP?</h3>
+<p class="kecil">Isi di sini, namanya langsung muncul di Papan Digital!</p>
+<input id="nama" placeholder="Nama Warga">
+<input id="user" placeholder="Username (contoh: soleh)">
+<select id="jabatan">
+<option>Warga Biasa</option><option>Bu RT</option><option>Pedagang</option><option>Petani</option><option>Penjaga Desa</option><option>Anak Desa</option><option>Bot Desa</option>
+</select>
+<select id="emoji">
+<option value="🧑">🧑 Cowok</option><option value="👧">👧 Cewek</option><option value="👦">👦 Anak Cowok</option><option value="👩">👩 Cewek Dewasa</option><option value="🤖">🤖 Robot</option><option value="🧟">🧟 Zombie</option>
+</select>
+<button class="hijau" onclick="buatKTP()">✨ BUAT KTP WARGA!</button>
+<p class="kecil" id="pesan"></p>
+</div>
+
+<!-- PAPAN DIGITAL -->
+<div class="card">
+<h3>📺 PAPAN DIGITAL DESA</h3>
+<p>👥 Total Warga: <b id="total" style="color:#22c55e">0</b> Orang (tidak termasuk Pak RT)</p>
+<div class="papan" id="papan"></div>
+<button class="biru" onclick="location.reload()">🔄 REFRESH PAPAN</button>
+<button class="merah" onclick="hapusWarga()">🗑️ HAPUS SEMUA WARGA (Khusus Pak RT)</button>
+</div>
+
+<p class="kecil">© 2026 Desa Netizen • Pimpinan Pak RT</p>
+
+<script>
+let warga = JSON.parse(localStorage.getItem('papan_desa') || '[]');
+let namaRT = localStorage.getItem('nama_pak_rt') || '';
+
+function tampil(){
+  let p=document.getElementById('papan');
+  document.getElementById('total').innerText=warga.length;
+  document.getElementById('infoRT').innerText = namaRT ? 'Pak RT saat ini: 👑 '+namaRT : 'Belum diisi, isi namamu di atas!';
+  if(namaRT) document.getElementById('namaRT').value=namaRT;
+
+  let html='';
+  // PAK RT SELALU DI ATAS, PALING ISTIMEWA!
+  html+=`<div class="warga pakrt">
+    <div><span style="font-size:30px">👑</span> <b>${namaRT || 'Pak RT'}</b><br><span style="font-size:12px">Pemimpin Desa Netizen • NIK: 3171000000000001</span></div>
+    <span class="badge-rt">👑 PAK RT</span>
+  </div>`;
+  html+=`<p style="color:#f59e0b;text-align:center;font-size:12px">--- WARGA DESA ---</p>`;
+  if(warga.length==0) html+=`<p style="text-align:center;color:#6b7280">Belum ada warga...<br>Jadilah warga pertama!</p>`;
+  [...warga].reverse().forEach(w=>{
+    html+=`<div class="warga"><div><span style="font-size:26px">${w.emoji}</span> <b>${w.nama}</b><br><span style="font-size:12px;color:#9ca3af">@${w.user} • ${w.jabatan}<br>NIK: ${w.nik}</span></div><span class="badge">✅ WARGA</span></div>`;
+  });
+  p.innerHTML=html;
+}
+function simpanRT(){
+  let n=document.getElementById('namaRT').value.trim();
+  if(!n){alert('Isi nama kamu dulu, Pak RT!');return}
+  namaRT=n;localStorage.setItem('nama_pak_rt',n);tampil();
+  alert('Selamat Datang Pak RT '+n+'! 👑\nKamu sekarang jadi pemimpin Desa Netizen!');
+}
+function buatKTP(){
+  let nama=document.getElementById('nama').value.trim();
+  let user=document.getElementById('user').value.trim().toLowerCase().replace(/\s/g,'');
+  let jab=document.getElementById('jabatan').value;
+  let emo=document.getElementById('emoji').value;
+  if(!nama||!user){document.getElementById('pesan').innerText='❌ Isi Nama & Username dulu!';return}
+  if(warga.find(w=>w.user==user)){document.getElementById('pesan').innerText='❌ @'+user+' udah ada!';return}
+  let nik='3171'+Math.floor(Math.random()*1000000000000);
+  warga.push({nama:nama,user:user,jabatan:jab,emoji:emo,nik:nik});
+  localStorage.setItem('papan_desa',JSON.stringify(warga));
+  document.getElementById('pesan').innerText='🎉 '+nama+' udah jadi warga!';
+  document.getElementById('nama').value='';document.getElementById('user').value='';
+  tampil();
+  alert('🪪 KTP BERHASIL!\nNama: '+nama+'\nUsername: @'+user+'\nDisahkan oleh Pak RT '+ (namaRT||'') +'\n\nNamamu udah muncul di Papan Digital!');
+}
+function hapusWarga(){
+  if(confirm('Pak RT, yakin hapus semua warga? Pak RT tidak akan terhapus!')){
+    warga=[];localStorage.setItem('papan_desa',JSON.stringify(warga));tampil();
+  }
+}
+tampil();
+</script>
+</body>
+  </html>
