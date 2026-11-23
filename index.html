@@ -26,16 +26,12 @@ button{width:100%;padding:13px;border:none;border-radius:12px;font-weight:bold;f
 <div style="font-size:60px">👑</div>
 <h1 style="margin:5px">DESA NETIZEN</h1>
 <p class="kecil">Selamat Datang di Desa Netizen! 🇮🇩</p>
-
-<!-- HALAMAN PERTAMA - PILIH MASUK / DAFTAR -->
 <div id="halAwal" class="card">
 <h3>MAU NGAPAIN?</h3>
 <button class="biru" onclick="keMasuk()">🔑 MASUK DESA</button>
 <button class="kuning" onclick="keDaftar()">📝 DAFTAR DESA NETIZEN</button>
 <p class="kecil">Baru pertama kali? Pencet DAFTAR dulu!</p>
 </div>
-
-<!-- HALAMAN MASUK -->
 <div id="halMasuk" class="card hidden">
 <h3>🔑 MASUK DESA</h3>
 <p style="font-size:13px">Pilih dulu kamu siapa!</p>
@@ -50,8 +46,6 @@ button{width:100%;padding:13px;border:none;border-radius:12px;font-weight:bold;f
 <button class="abu" onclick="keAwal()">⬅️ KEMBALI</button>
 <p class="kecil">Belum punya akun? <b style="color:#f59e0b;cursor:pointer" onclick="keDaftar()">Daftar di sini!</b></p>
 </div>
-
-<!-- HALAMAN DAFTAR -->
 <div id="halDaftar" class="card hidden">
 <h3>📝 DAFTAR DESA NETIZEN</h3>
 <p class="kecil">Isi semua, habis itu kamu dialihin ke MASUK!</p>
@@ -68,18 +62,15 @@ button{width:100%;padding:13px;border:none;border-radius:12px;font-weight:bold;f
 <button class="abu" onclick="keAwal()">⬅️ KEMBALI</button>
 <p class="kecil" id="pesanDaftar"></p>
 </div>
-
-<!-- HALAMAN DALAM DESA -->
 <div id="halDesa" class="hidden">
 <div class="card" style="background:#fef3c7;color:#000">
 <h2 style="margin:5px" id="sambutan">Halo!</h2>
 <p style="font-size:12px;margin:0" id="detailSaya"></p>
 <button class="merah" onclick="logout()">🚪 KELUAR</button>
 </div>
-
 <div class="card">
 <h3>📺 PAPAN NAMA WARGA</h3>
-<p class="kecil">Hanya orang yang mendaftar yang muncul di sini!<br>Nama Pak RT disembunyiin!</p>
+<p class="kecil">Hanya orang yang mendaftar yang muncul di sini!</p>
 <p>👥 Total yang Daftar: <b id="total" style="color:#22c55e">0</b></p>
 <div class="papan" id="papan"></div>
 <button class="biru" onclick="tampil()">🔄 REFRESH</button>
@@ -89,106 +80,92 @@ button{width:100%;padding:13px;border:none;border-radius:12px;font-weight:bold;f
 </div>
 </div>
 </div>
-
 <p class="kecil">© 2026 Desa Netizen</p>
-
 <script>
-// AKUN PAK RT - DISEMBUNYIIN, TIDAK DITAMPILKAN
-let USER_RT = "pakrt_netizen";
-let PASS_RT = "desa123";
-
+let USER_RT="pakrt_netizen";
+let PASS_RT="desa123";
 let avatars=["🧑‍🎤","👩‍🎤","🧑‍🚀","👩‍🚀","😎","🤙","🧑‍💻","👩‍💻","🧟","🤖"];
 let avatarTerpilih="";
 let roleLogin="";
 let users=JSON.parse(localStorage.getItem('desa_users_final')||'[]');
 let loginSkrg=JSON.parse(localStorage.getItem('desa_login_final')||'null');
-
 let grid=document.getElementById('avatarGrid');
 avatars.forEach(a=>{
-  let d=document.createElement('div'); d.className='avatar'; d.innerText=a;
-  d.onclick=()=>{document.querySelectorAll('.avatar').forEach(x=>x.classList.remove('pilih')); d.classList.add('pilih'); avatarTerpilih=a; document.getElementById('avatarPilih').innerText='Kamu pilih: '+a;};
-  grid.appendChild(d);
+let d=document.createElement('div');d.className='avatar';d.innerText=a;
+d.onclick=()=>{document.querySelectorAll('.avatar').forEach(x=>x.classList.remove('pilih'));d.classList.add('pilih');avatarTerpilih=a;document.getElementById('avatarPilih').innerText='Kamu pilih: '+a;};
+grid.appendChild(d);
 });
-
-function sembunyiSemua(){ ['halAwal','halMasuk','halDaftar','halDesa'].forEach(id=>document.getElementById(id).classList.add('hidden')); }
-function keAwal(){ sembunyiSemua(); document.getElementById('halAwal').classList.remove('hidden'); }
-function keMasuk(){ sembunyiSemua(); document.getElementById('halMasuk').classList.remove('hidden'); }
-function keDaftar(){ sembunyiSemua(); document.getElementById('halDaftar').classList.remove('hidden'); }
-
+function sembunyiSemua(){['halAwal','halMasuk','halDaftar','halDesa'].forEach(id=>document.getElementById(id).classList.add('hidden'));}
+function keAwal(){sembunyiSemua();document.getElementById('halAwal').classList.remove('hidden');}
+function keMasuk(){sembunyiSemua();document.getElementById('halMasuk').classList.remove('hidden');}
+function keDaftar(){sembunyiSemua();document.getElementById('halDaftar').classList.remove('hidden');}
 function pilihRole(r){
-  roleLogin=r;
-  document.getElementById('roleRT').classList.toggle('pilih', r=='rt');
-  document.getElementById('roleWarga').classList.toggle('pilih', r=='warga');
-  document.getElementById('infoRole').innerText = r=='rt' ? '👑 Kamu pilih PAK RT! Masukin Username + Password Pak RT!' : '🧑 Kamu pilih WARGA! Masukin Username + Password yang kamu daftar tadi!';
+roleLogin=r;
+document.getElementById('roleRT').classList.toggle('pilih',r=='rt');
+document.getElementById('roleWarga').classList.toggle('pilih',r=='warga');
+document.getElementById('infoRole').innerText=r=='rt'?'👑 Kamu pilih PAK RT! Masukin Username + Password Pak RT!':'🧑 Kamu pilih WARGA! Masukin Username + Password yang kamu daftar tadi!';
 }
 function daftar(){
-  let nama=document.getElementById('dNama').value.trim();
-  let user=document.getElementById('dUser').value.trim().toLowerCase().replace(/\s/g,'');
-  let pass=document.getElementById('dPass').value;
-  let tgl=document.getElementById('dTgl').value;
-  let kota=document.getElementById('dKota').value.trim();
-  let asal=document.getElementById('dAsal').value.trim();
-  if(!nama||!user||!pass||!tgl||!kota||!asal||!avatarTerpilih){document.getElementById('pesanDaftar').innerText='❌ Isi SEMUA! Nama, Username, Password, Tgl Lahir, Kota, Asal & Avatar!';return}
-  if(user==USER_RT){document.getElementById('pesanDaftar').innerText='❌ Username itu punya Pak RT!';return}
-  if(users.find(u=>u.user==user)){document.getElementById('pesanDaftar').innerText='❌ @'+user+' udah dipake!';return}
-  let nik='3171'+Math.floor(Math.random()*1000000000000);
-  users.push({nama,user,pass,tgl,kota,asal,avatar:avatarTerpilih,nik});
-  localStorage.setItem('desa_users_final',JSON.stringify(users));
-  alert('🎉 BERHASIL DAFTAR!\nUsername: @'+user+'\nPassword: (yang kamu buat tadi)\n\nSekarang kamu dialihin ke MASUK!\nMasukan Username & Password yang baru kamu daftar!');
-  keMasuk();
-  pilihRole('warga');
-  document.getElementById('loginUser').value=user;
+let nama=document.getElementById('dNama').value.trim();
+let user=document.getElementById('dUser').value.trim().toLowerCase().replace(/\s/g,'');
+let pass=document.getElementById('dPass').value;
+let tgl=document.getElementById('dTgl').value;
+let kota=document.getElementById('dKota').value.trim();
+let asal=document.getElementById('dAsal').value.trim();
+if(!nama||!user||!pass||!tgl||!kota||!asal||!avatarTerpilih){document.getElementById('pesanDaftar').innerText='❌ Isi SEMUA! Nama, Username, Password, Tgl Lahir, Kota, Asal & Avatar!';return}
+if(user==USER_RT){document.getElementById('pesanDaftar').innerText='❌ Username itu punya Pak RT!';return}
+if(users.find(u=>u.user==user)){document.getElementById('pesanDaftar').innerText='❌ @'+user+' udah dipake!';return}
+let nik='3171'+Math.floor(Math.random()*1000000000000);
+users.push({nama,user,pass,tgl,kota,asal,avatar:avatarTerpilih,nik});
+localStorage.setItem('desa_users_final',JSON.stringify(users));
+alert('🎉 BERHASIL DAFTAR!\nUsername: @'+user+'\nSekarang kamu dialihin ke MASUK!\nMasukan Username & Password yang baru kamu daftar!');
+keMasuk();pilihRole('warga');document.getElementById('loginUser').value=user;
 }
 function login(){
-  let user=document.getElementById('loginUser').value.trim().toLowerCase();
-  let pass=document.getElementById('loginPass').value;
-  if(!roleLogin){alert('Pilih dulu! Kamu Pak RT atau Warga? Klik ikon 👑 / 🧑 di atas!');return}
-  if(roleLogin=='rt'){
-    if(user==USER_RT && pass==PASS_RT){
-      loginSkrg={nama:'Pak RT',user:USER_RT,role:'rt',avatar:'👑'};
-      localStorage.setItem('desa_login_final',JSON.stringify(loginSkrg));
-      masukDesa(); return;
-    } else { alert('❌ Username / Password Pak RT salah!'); return; }
-  } else {
-    let ketemu=users.find(u=>u.user==user && u.pass==pass);
-    if(!ketemu){alert('❌ Username / Password salah!\nCoba daftar dulu kalau belum daftar!');return}
-    loginSkrg={...ketemu,role:'warga'}; localStorage.setItem('desa_login_final',JSON.stringify(loginSkrg));
-    masukDesa();
-  }
+let user=document.getElementById('loginUser').value.trim().toLowerCase();
+let pass=document.getElementById('loginPass').value;
+if(!roleLogin){alert('Pilih dulu! Kamu Pak RT atau Warga? Klik ikon 👑 / 🧑 di atas!');return}
+if(roleLogin=='rt'){
+if(user==USER_RT&&pass==PASS_RT){loginSkrg={nama:'Pak RT',user:USER_RT,role:'rt',avatar:'👑'};localStorage.setItem('desa_login_final',JSON.stringify(loginSkrg));masukDesa();return;}
+else{alert('❌ Username / Password Pak RT salah!');return;}
+}else{
+let ketemu=users.find(u=>u.user==user&&u.pass==pass);
+if(!ketemu){alert('❌ Username / Password salah!\nCoba daftar dulu kalau belum daftar!');return}
+loginSkrg={...ketemu,role:'warga'};localStorage.setItem('desa_login_final',JSON.stringify(loginSkrg));masukDesa();
+}
 }
 function masukDesa(){
-  sembunyiSemua(); document.getElementById('halDesa').classList.remove('hidden');
-  if(loginSkrg.role=='rt'){
-    document.getElementById('sambutan').innerText='👑 Halo Pak RT!';
-    document.getElementById('detailSaya').innerText='Kamu masuk sebagai Pemimpin Desa. Nama kamu disembunyiin di papan!';
-    document.getElementById('areaHapus').style.display='block';
-  } else {
-    document.getElementById('sambutan').innerText=loginSkrg.avatar+' Halo '+loginSkrg.nama+'!';
-    document.getElementById('detailSaya').innerText='@'+loginSkrg.user+' • '+loginSkrg.kota+' • Asal '+loginSkrg.asal+' • Lahir '+loginSkrg.tgl+' • NIK: '+loginSkrg.nik;
-    document.getElementById('areaHapus').style.display='none';
-  }
-  tampil();
+sembunyiSemua();document.getElementById('halDesa').classList.remove('hidden');
+if(loginSkrg.role=='rt'){
+document.getElementById('sambutan').innerText='👑 Halo Pak RT!';
+document.getElementById('detailSaya').innerText='Kamu masuk sebagai Pemimpin Desa. Nama kamu disembunyiin di papan!';
+document.getElementById('areaHapus').style.display='block';
+}else{
+document.getElementById('sambutan').innerText=loginSkrg.avatar+' Halo '+loginSkrg.nama+'!';
+document.getElementById('detailSaya').innerText='@'+loginSkrg.user+' • '+loginSkrg.kota+' • Asal '+loginSkrg.asal+' • Lahir '+loginSkrg.tgl+' • NIK: '+loginSkrg.nik;
+document.getElementById('areaHapus').style.display='none';
 }
-function logout(){ localStorage.removeItem('desa_login_final'); loginSkrg=null; keAwal(); }
+tampil();
+}
+function logout(){localStorage.removeItem('desa_login_final');loginSkrg=null;keAwal();}
 function tampil(){
-  let p=document.getElementById('papan');
-  document.getElementById('total').innerText=users.length;
-  let html='';
-  // PAPAN CUMA ORANG YANG MENDAFTAR, NAMA PAK RT TIDAK DITAMPILKAN!
-  if(users.length==0) html+=`<p style="text-align:center;color:#6b7280">Belum ada yang daftar...</p>`;
-  [...users].reverse().forEach(w=>{
-    let saya = loginSkrg && loginSkrg.user==w.user ? ' (KAMU)' : '';
-    html+=`<div class="warga"><div><span style="font-size:26px">${w.avatar}</span> <b>${w.nama}${saya}</b><br><span style="font-size:12px;color:#9ca3af">@${w.user} • ${w.kota} • Asal ${w.asal}<br>Lahir: ${w.tgl} • NIK: ${w.nik}</span></div><span class="badge">✅ WARGA</span></div>`;
-  });
-  p.innerHTML=html;
+let p=document.getElementById('papan');
+document.getElementById('total').innerText=users.length;
+let html='';
+if(users.length==0)html+=`<p style="text-align:center;color:#6b7280">Belum ada yang daftar...</p>`;
+[...users].reverse().forEach(w=>{
+let saya=loginSkrg&&loginSkrg.user==w.user?' (KAMU)':'';
+html+=`<div class="warga"><div><span style="font-size:26px">${w.avatar}</span> <b>${w.nama}${saya}</b><br><span style="font-size:12px;color:#9ca3af">@${w.user} • ${w.kota} • Asal ${w.asal}<br>Lahir: ${w.tgl} • NIK: ${w.nik}</span></div><span class="badge">✅ WARGA</span></div>`;
+});
+p.innerHTML=html;
 }
 function hapusWarga(){
-  if(!loginSkrg || loginSkrg.role!='rt'){alert('Cuma Pak RT!');return}
-  let p=document.getElementById('passHapus').value;
-  if(p!=PASS_RT){alert('❌ Password Pak RT salah!');return}
-  if(confirm('Pak RT, hapus semua yang daftar?')){users=[];localStorage.setItem('desa_users_final',JSON.stringify(users));tampil();}
+if(!loginSkrg||loginSkrg.role!='rt'){alert('Cuma Pak RT!');return}
+let p=document.getElementById('passHapus').value;
+if(p!=PASS_RT){alert('❌ Password Pak RT salah!');return}
+if(confirm('Pak RT, hapus semua yang daftar?')){users=[];localStorage.setItem('desa_users_final',JSON.stringify(users));tampil();}
 }
-if(loginSkrg) masukDesa();
+if(loginSkrg)masukDesa();
 </script>
 </body>
-  </html>
+                                                              </html>
